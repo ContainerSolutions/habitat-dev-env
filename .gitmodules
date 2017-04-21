@@ -1,0 +1,3 @@
+[submodule "core-plans"]
+	path = core-plans
+	url = https://github.com/habitat-sh/core-plans
