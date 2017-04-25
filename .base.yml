@@ -1,0 +1,17 @@
+version: '2'
+services:
+  base:
+    build:
+      context: .
+      args:
+        uid: 1000
+    image: habitat
+    volumes:
+      - .:/mnt
+    working_dir: /mnt
+    stdin_open: true
+    tty: true
+    command: /bin/sh
+    cap_add:
+      - SYS_ADMIN
+

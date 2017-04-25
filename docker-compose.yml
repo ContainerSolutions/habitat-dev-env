@@ -1,16 +1,13 @@
 version: '2'
 services:
-  habitat:
-    container_name: habitat
-    build:
-      context: .
-      args:
-        uid: ${UID}
-    image: habitat
-    volumes:
-      - .:/mnt
-    stdin_open: true
-    tty: true
-    command: /bin/sh
-    cap_add:
-      - SYS_ADMIN
+  master:
+    container_name: habitat_master
+    extends:
+      file: .base.yml
+      service: base
+  slave:
+    extends:
+      file: .base.yml
+      service: base
+    volumes_from:
+      - master

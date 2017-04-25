@@ -1,18 +1,18 @@
 FROM alpine:3.4
 
-RUN apk --no-cache add sudo
+ARG uid
 
-ENV SCRIPT https://raw.githubusercontent.com/habitat-sh/habitat/master/components/hab/install.sh
+RUN apk --no-cache add sudo \
+	&& echo "hab ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+	&& adduser -D -u ${uid} hab
+
+ARG script=https://raw.githubusercontent.com/habitat-sh/habitat/master/components/hab/install.sh
 RUN apk --no-cache add -t build-pkgs curl wget ca-certificates bash \
-	&& curl "$SCRIPT" | bash \
+	&& curl "$script" | bash \
 	&& apk del build-pkgs
 
-ENV HAB_ORIGIN cs
-WORKDIR /mnt
-
-ARG uid
-RUN adduser -D -u ${uid} hab
-RUN echo "#${uid} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 USER hab
+ENV HAB_ORIGIN cs
 RUN hab origin key generate cs && \
 		hab origin key export cs --type public | sudo hab origin key import
+VOLUME /hab
