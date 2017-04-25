@@ -9,5 +9,8 @@ services:
     extends:
       file: .base.yml
       service: base
+    volumes:
+      - /hab/sup
+      - /hab/svc
     volumes_from:
       - master
