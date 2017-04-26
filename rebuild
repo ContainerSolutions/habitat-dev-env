@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+
+.PHONY: all
+
+include results/last_build.env
+
+all: last_build.hart
+
+last_build.hart: results/$(pkg_artifact) default.toml  $(wildcard config/*) $(wildcard hooks/*)
+	tail -n +6 $< | xzcat > $@.tmp
+	tar rf $@.tmp --transform \
+		's|^|hab/pkgs/$(pkg_origin)/$(pkg_name)/$(pkg_version)/$(pkg_release)/|' \
+		$(wordlist 2, $(words $^), $^)
+	xz $@.tmp
+	hab pkg sign --origin $(pkg_origin) $@.tmp.xz $@
+	rm $@.tmp.xz
