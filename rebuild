@@ -2,9 +2,20 @@
 
 .PHONY: all check start
 
-include results/last_build.env
 hab_path = hab/pkgs/$(pkg_origin)/$(pkg_name)/$(pkg_version)/$(pkg_release)/
+
+include results/last_build.env
+
+ifeq ($(DEBUG), 1)
+	debug=RUST_LOG=debug RUST_BACKTRACE=1
+else
+	debug=
+endif
+
 all: last_build.hart
+
+results:
+	hab pkg build .
 
 last_build.hart: results/$(pkg_artifact) default.toml  $(wildcard config/*) $(wildcard hooks/*)
 	tail -n +6 $< | xzcat > $@.tmp
@@ -19,4 +30,4 @@ check: last_build.hart
 
 start: last_build.hart
 	sudo rm -rf /$(hab_path)
-	sudo hab start -v $<
+	sudo $(debug) hab start -v $<
