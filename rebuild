@@ -1,16 +1,22 @@
 #!/usr/bin/make -f
 
-.PHONY: all
+.PHONY: all check start
 
 include results/last_build.env
-
+hab_path = hab/pkgs/$(pkg_origin)/$(pkg_name)/$(pkg_version)/$(pkg_release)/
 all: last_build.hart
 
 last_build.hart: results/$(pkg_artifact) default.toml  $(wildcard config/*) $(wildcard hooks/*)
 	tail -n +6 $< | xzcat > $@.tmp
-	tar rf $@.tmp --transform \
-		's|^|hab/pkgs/$(pkg_origin)/$(pkg_name)/$(pkg_version)/$(pkg_release)/|' \
-		$(wordlist 2, $(words $^), $^)
+	tar f $@.tmp --delete $(hab_path)config $(hab_path)hooks
+	tar rf $@.tmp --transform 's|^|$(hab_path)|' $(wordlist 2, $(words $^), $^)
 	xz $@.tmp
 	hab pkg sign --origin $(pkg_origin) $@.tmp.xz $@
 	rm $@.tmp.xz
+
+check: last_build.hart
+	tail -n +6 $< | xzcat | tar t
+
+start: last_build.hart
+	sudo rm -rf /$(hab_path)
+	sudo hab start -v $<
