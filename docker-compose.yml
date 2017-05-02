@@ -12,6 +12,5 @@ services:
     volumes:
       - /hab/sup
       - /hab/svc
-    working_dir: /mnt/core-plans/elasticsearch
     volumes_from:
       - master
