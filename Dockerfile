@@ -16,4 +16,5 @@ ENV HAB_ORIGIN cs
 RUN hab origin key generate cs && \
 		hab origin key export cs --type public | sudo hab origin key import
 VOLUME /hab
+VOLUME /home/hab/.hab
 COPY rebuild /usr/bin/

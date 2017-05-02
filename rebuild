@@ -2,9 +2,9 @@
 
 .PHONY: all check start
 
+include results/last_build.env
 hab_path = hab/pkgs/$(pkg_origin)/$(pkg_name)/$(pkg_version)/$(pkg_release)/
 
-include results/last_build.env
 
 ifeq ($(DEBUG), 1)
 	debug=RUST_LOG=debug RUST_BACKTRACE=1
