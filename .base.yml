@@ -8,7 +8,7 @@ services:
     image: habitat
     volumes:
       - .:/mnt
-    working_dir: /mnt/core-plans/zookeeper
+    working_dir: /mnt/core-plans/cassandra
     stdin_open: true
     tty: true
     command: /bin/sh
