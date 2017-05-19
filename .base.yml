@@ -8,7 +8,8 @@ services:
     image: habitat
     volumes:
       - .:/mnt
-    working_dir: /mnt/core-plans/cassandra
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /mnt/core-plans/
     stdin_open: true
     tty: true
     command: /bin/sh

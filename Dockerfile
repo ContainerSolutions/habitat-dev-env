@@ -13,8 +13,8 @@ RUN apk --no-cache add -t build-pkgs wget ca-certificates tar \
 	&& apk del build-pkgs
 
 USER hab
-ENV HAB_ORIGIN cs
-RUN hab origin key generate cs && \
-		hab origin key export cs --type public | sudo hab origin key import
+ENV HAB_ORIGIN core
+RUN hab origin key generate core && \
+		hab origin key export core --type public | sudo hab origin key import
 VOLUME /hab
 VOLUME /home/hab/.hab
